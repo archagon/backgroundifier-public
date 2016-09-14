@@ -8,15 +8,14 @@
 
 extension ViewController {
     func createOutputDirectory() -> Bool {
-        var success = false
+        var success = true
         
         if let outputDirectory = outputDirectory {
-            var error: NSError?
-            NSFileManager.defaultManager().createDirectoryAtPath(outputDirectory, withIntermediateDirectories: true, attributes: nil, error: &error)
-            
-            // found/created output directory!
-            if error == nil {
-                success = true
+            do {
+                try NSFileManager.defaultManager().createDirectoryAtPath(outputDirectory as String, withIntermediateDirectories: true, attributes:nil)
+            }
+            catch {
+                success = false
             }
         }
         
@@ -24,6 +23,10 @@ extension ViewController {
     }
     
     func process() {
+        // AB: might not really belong here, but process() is the only place where the output dir is actually used
+        self.openPanel?.close()
+        self.openPanel = nil
+        
         if self.processing {
             return
         }
@@ -34,14 +37,17 @@ extension ViewController {
         }
         
         // calculate number of simultaneous threads
-        if let widthString = self.resolutionH?.stringValue, heightString = self.resolutionV?.stringValue {
+        if
+            let widthString = self.resolutionH?.stringValue,
+            let heightString = self.resolutionV?.stringValue
+        {
             let width = CGFloat((widthString as NSString).doubleValue)
             let height = CGFloat((heightString as NSString).doubleValue)
             
             // set limits on memory and CPU in case system reports something crazy
             let megabytesMemory = min((Double(NSProcessInfo.processInfo().physicalMemory) / 1024.0) / 1024.0, 32 * 1024)
             let cores = min(NSProcessInfo.processInfo().processorCount, 16)
-            let activeCores = min(NSProcessInfo.processInfo().activeProcessorCount, 16)
+            //let activeCores = min(NSProcessInfo.processInfo().activeProcessorCount, 16)
             
             // estimate of the memory required for each processed image
             let megabytesPerPicture = Double(width * height)
@@ -80,16 +86,17 @@ extension ViewController {
             let minimumEdgeGapToHeightRatio = CGFloat(NSUserDefaults.standardUserDefaults().doubleForKey(kDefaultsMinimumEdgeGapToHeightRatio))
             let targetBackgroundScale = CGFloat(NSUserDefaults.standardUserDefaults().doubleForKey(kDefaultsTargetBackgroundScale))
             let maximumStretchScale = CGFloat(NSUserDefaults.standardUserDefaults().doubleForKey(kDefaultsMaximumStretchScale))
+            let maximumBlurRadius = CGFloat(NSUserDefaults.standardUserDefaults().doubleForKey(kDefaultsMaximumBlurRadius))
             let customColor = self.customColor
             
             let outputDirectory = self.outputDirectory
             let allowedTypes = self.allowedTypes
             
-            var toDo: Int = files.count //only accessed on the main thread
+            let toDo: Int = files.count //only accessed on the main thread
             var doneSet: [Int:Bool] = [:] //only accessed on the main thread
             
             var finished: [Bool] = [] //only accessed on the main thread
-            for core in 0..<finalCores {
+            for _ in 0..<finalCores {
                 finished.append(false)
             }
             
@@ -122,70 +129,80 @@ extension ViewController {
                             self.dropletBar?.doubleValue = (Double(doneSet.count) / Double(toDo)) * 100
                         });
                     }
-                    
+
                     // sub-function 2: actually process the image and save the results
                     let process = { (image: NSImage, filename: String, outputURL: NSURL) -> ProcessorError in
                         var returnValue: ProcessorError = .None
                         
                         autoreleasepool {
-                            if let imageRep = processImage(image, NSMakeSize(width, height), blur, (auto ? nil : customColor), blurConstant, shadowConstant, minimumEdgeGapToHeightRatio, targetBackgroundScale, maximumStretchScale, shadowAlpha) {
-                                if let data = imageRep.representationUsingType(NSBitmapImageFileType.NSJPEGFileType, properties: [NSImageCompressionFactor:0.75]) {
-                                    var newOutputURL = outputURL.URLByAppendingPathComponent(filename)
-                                    if let originalOutputPath = newOutputURL.path {
-                                        let leftPath = originalOutputPath.stringByDeletingLastPathComponent
-                                        var filename = originalOutputPath.lastPathComponent.stringByDeletingPathExtension
-                                        let ext = "jpg"
+                            processing: do {
+                                // process image
+                                guard let imageRep = processImage(image, resolution: NSMakeSize(width, height), blur: blur, color: (auto ? nil : customColor), blurConstant: blurConstant, shadowConstant: shadowConstant, minimumEdgeGapToHeightRatio: minimumEdgeGapToHeightRatio, targetBackgroundScale: targetBackgroundScale, maximumStretchScale: maximumStretchScale, maximumBlurRadius: maximumBlurRadius, shadowAlpha: shadowAlpha) else {
+                                    returnValue = .ProcessingFailed
+                                    break processing
+                                }
+                                
+                                // convert image data to compressed image data
+                                guard let data = imageRep.representationUsingType(NSBitmapImageFileType.JPEG, properties: [NSImageCompressionFactor:0.75]) else {
+                                    returnValue = .ProcessingFailed
+                                    break processing
+                                }
+                                
+                                let newOutputURL = outputURL.URLByAppendingPathComponent(filename)
+                                
+                                // get output dir path
+                                guard let originalOutputPath = newOutputURL?.path as NSString? else {
+                                    returnValue = .InvalidOutput
+                                    break processing
+                                }
+                                
+                                let leftPath: NSString = originalOutputPath.stringByDeletingLastPathComponent
+                                let filename: NSString = (originalOutputPath.lastPathComponent as NSString).stringByDeletingPathExtension
+                                let ext = "jpg"
+                                
+                                // get full output path (w/file)
+                                guard var outputPath = (leftPath.stringByAppendingPathComponent("\(filename)") as NSString).stringByAppendingPathExtension(ext) else {
+                                    returnValue = .InvalidOutput
+                                    break processing
+                                }
+                                
+                                // check for existing files with the same name
+                                if !overwrite {
+                                    var i = 0
+                                    let arbitrarySearchLimit = 10000
+                                    while (i < arbitrarySearchLimit) {
+                                        let filenameAddition = (i == 0 ? "" : " (\(i))")
                                         
-                                        if var outputPath = leftPath.stringByAppendingPathComponent("\(filename)").stringByAppendingPathExtension(ext) {
-                                            // check for existing files with the same name
-                                            if !overwrite {
-                                                var i = 0
-                                                let arbitrarySearchLimit = 10000
-                                                while (i < arbitrarySearchLimit) {
-                                                    let filenameAddition = (i == 0 ? "" : " (\(i))")
-                                                    
-                                                    if let newOutputPath = leftPath.stringByAppendingPathComponent("\(filename)\(filenameAddition)").stringByAppendingPathExtension(ext) {
-                                                        if !NSFileManager.defaultManager().fileExistsAtPath(newOutputPath) {
-                                                            outputPath = newOutputPath
-                                                            break
-                                                        }
-                                                    }
-                                                    
-                                                    i += 1
-                                                }
-                                            }
-                                            
-                                            var error: NSError?
-                                            let fileWritten = data.writeToFile(outputPath, options: NSDataWritingOptions.DataWritingAtomic, error: &error)
-                                            
-                                            if error != nil {
-                                                returnValue = .ProcessingFailed
-                                            }
-                                            else {
-                                                returnValue = .None
+                                        if let newOutputPath = (leftPath.stringByAppendingPathComponent("\(filename)\(filenameAddition)") as NSString).stringByAppendingPathExtension(ext) {
+                                            if !NSFileManager.defaultManager().fileExistsAtPath(newOutputPath) {
+                                                outputPath = newOutputPath
+                                                break
                                             }
                                         }
-                                        else {
-                                            returnValue = .InvalidOutput
-                                        }
-                                    }
-                                    else {
-                                        returnValue = .InvalidOutput
+                                        
+                                        i += 1
                                     }
                                 }
-                                else {
+                                
+                                // wriiiiite
+                                do {
+                                    let dataURL = NSURL(fileURLWithPath: outputPath)
+                                    try data.writeToURL(dataURL, options: NSDataWritingOptions.DataWritingAtomic)
+                                    returnValue = .None
+                                }
+                                catch NSCocoaError.FileWriteNoPermissionError {
+                                    returnValue = .NoWritePermission
+                                }
+                                catch {
                                     returnValue = .ProcessingFailed
                                 }
-                            }
-                            else {
-                                returnValue = .ProcessingFailed
                             }
                         }
                         
                         return returnValue
                     }
-                    
-                    for (i, element) in enumerate(files) {
+
+                    for (i, element) in files.enumerate() {
                         if (self.shouldStopProcessingFlag) {
                             cancelled = true //cancelled can only be toggled ON
                         }
@@ -199,79 +216,86 @@ extension ViewController {
                             commit(i, nil, .Cancelled, nil)
                             continue
                         }
-                        
-                        if let elementURL = NSURL(fileURLWithPath: element.path) {
-                            if let outputPath = outputDirectory, let outputURL = NSURL(fileURLWithPath: outputPath) {
-                                commit(i, outputURL, .Processing, nil)
-                                
-                                var errorCode = ProcessorError.None
-                                
-                                var error: NSError?
-                                var type: AnyObject?
-                                let gotResourceValue = elementURL.getResourceValue(&type, forKey: NSURLTypeIdentifierKey, error: &error)
-                                if gotResourceValue {
-                                    if let type = type as? String {
-                                        // TODO: async read?
-                                        if let data = NSData(contentsOfURL: elementURL) {
-                                            if let image = NSImage(data: data) {
-                                                var foundConformingType = false
-                                                for allowedType in allowedTypes {
-                                                    if NSWorkspace.sharedWorkspace().type(type, conformsToType: allowedType as String) {
-                                                        foundConformingType = true
-                                                        break
-                                                    }
-                                                }
-                                                
-                                                if foundConformingType {
-                                                    if let filename = elementURL.lastPathComponent {
-                                                        errorCode = process(image, filename, outputURL)
-                                                    }
-                                                    else {
-                                                        errorCode = .InvalidInput
-                                                    }
-                                                }
-                                                else {
-                                                    errorCode = .InvalidFiletype
-                                                }
-                                            }
-                                            else {
-                                                // could not get image from data
-                                                errorCode = .InvalidInput
-                                            }
-                                        }
-                                        else {
-                                            // could not get data from file
-                                            errorCode = .InvalidInput
-                                        }
-                                    }
-                                    else {
-                                        // type is not string? weird
-                                        errorCode = .Other
-                                    }
-                                }
-                                else {
-                                    if let error = error {
-                                        if error.code == NSFileReadNoSuchFileError {
-                                            // file not found often appears here
-                                            errorCode = .InvalidInput
-                                        }
-                                        else {
-                                            errorCode = .Other
-                                        }
-                                    }
-                                    else {
-                                        errorCode = .Other
-                                    }
-                                }
-                                
-                                commit(i, outputURL, .Done, errorCode)
+
+                        conversion: do {
+                            // create file url for image
+                            guard let elementURL: NSURL = NSURL(fileURLWithPath: element.path) else {
+                                commit(i, nil, .Error, .InvalidInput)
+                                break conversion
                             }
-                            else {
+                            
+                            // create output path and url
+                            guard let outputPath = outputDirectory, let outputURL: NSURL = NSURL(fileURLWithPath: outputPath as String) else {
                                 commit(i, nil, .Error, .InvalidOutput)
+                                break conversion
                             }
-                        }
-                        else {
-                            commit(i, nil, .Error, .InvalidInput)
+                            
+                            // now we're actually processing
+                            commit(i, outputURL, .Processing, nil)
+                            
+                            var errorCode = ProcessorError.None
+                            
+                            processing: do {
+                                var objType: AnyObject?
+                                
+                                // get file url type
+                                do { try elementURL.getResourceValue(&objType, forKey: NSURLTypeIdentifierKey) }
+                                catch let error as NSError {
+                                    if error.code == NSFileReadNoSuchFileError {
+                                        // file not found often appears here
+                                        errorCode = .InvalidInput
+                                    }
+                                    else {
+                                        errorCode = .Other
+                                    }
+                                    break processing
+                                }
+                                
+                                // ensure it's a string
+                                guard let type = objType as? String else {
+                                    // type is not string? weird
+                                    errorCode = .Other
+                                    break processing
+                                }
+                                
+                                // ensure we have an allowed filetype
+                                var foundConformingType = false
+                                for allowedType in allowedTypes {
+                                    if NSWorkspace.sharedWorkspace().type(type, conformsToType: allowedType as String) {
+                                        foundConformingType = true
+                                        break
+                                    }
+                                }
+                                if !foundConformingType {
+                                    errorCode = .InvalidFiletype
+                                    break processing
+                                }
+                                
+                                // get actual image data
+                                // TODO: async read?
+                                guard let data = NSData(contentsOfURL: elementURL) else {
+                                    // could not get data from file
+                                    errorCode = .InvalidInput
+                                    break processing
+                                }
+                                
+                                // create an image from that data
+                                guard let image = NSImage(data: data) else {
+                                    // could not get image from data
+                                    errorCode = .InvalidInput
+                                    break processing
+                                }
+                                
+                                // get the filename
+                                guard let filename = elementURL.lastPathComponent else {
+                                    errorCode = .InvalidInput
+                                    break processing
+                                }
+                                
+                                errorCode = process(image, filename, outputURL)
+                            }
+                            
+                            commit(i, outputURL, .Done, errorCode)
                         }
                     }
                     
@@ -289,8 +313,7 @@ extension ViewController {
                             self.dropperBounce()
                             NSApp.requestUserAttention(NSRequestUserAttentionType.InformationalRequest)
                         }
-                    });
-                    
+                    })
                 })
             }
         }
@@ -320,10 +343,32 @@ extension ViewController {
     }
     
     func updateOutputDirectory(directory: NSURL) {
-        self.outputDirectory  = directory.path
+        // duplicate directory? don't do anything!
+        if let aURL = self.outputURL {
+            if aURL == directory {
+                return
+            }
+        }
+        
+        securityScoping: do {
+            if let oldURL = self.outputURL {
+                oldURL.stopAccessingSecurityScopedResource()
+            }
+            
+            let newSecurityScopedBookmark = try directory.bookmarkDataWithOptions(.WithSecurityScope, includingResourceValuesForKeys: nil, relativeToURL: nil)
+            
+            NSUserDefaults.standardUserDefaults().setObject(newSecurityScopedBookmark, forKey: kDefaultsLastUsedDirectory)
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        catch {
+            NSLog("Warning: could not save security scoped bookmark")
+        }
+        
+        self.outputDirectory = directory.path
+        self.outputURL = directory
         
         if let pathString = self.outputDirectory {
-            outputButton?.title = pathString
+            outputButton?.title = pathString as String
         }
         else {
             outputButton?.title = "Please select an output directory"

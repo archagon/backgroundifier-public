@@ -16,19 +16,19 @@ extension ViewController {
     }
     
     func dropperDraggingEntered(dropper: NSView) {
-        if var dropper = dropper as? DropletView {
+        if let _ = dropper as? DropletView {
             self.setDropletMode(.Hover)
         }
     }
     
     func dropperDraggingExited(dropper: NSView) {
-        if var dropper = dropper as? DropletView {
+        if let _ = dropper as? DropletView {
             self.setDropletMode(self.dropletNonHoverMode())
         }
     }
     
     func dropperDraggingEnded(dropper: NSView) {
-        if var dropper = dropper as? DropletView {
+        if let _ = dropper as? DropletView {
             self.setDropletMode(self.dropletNonHoverMode())
         }
     }
@@ -38,17 +38,19 @@ extension ViewController {
             if files.count == 1 {
                 let url = files[0]
                 
-                var error: NSError?
-                var isDirectory: AnyObject?
-                let gotResourceValue = url.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: &error)
-                
-                if gotResourceValue {
+                do {
+                    var isDirectory: AnyObject?
+                    
+                    try url.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey)
+                    
                     if let isDirectory = isDirectory as? NSNumber {
                         if isDirectory.boolValue {
                             self.updateOutputDirectory(url)
                             return true
                         }
                     }
+                }
+                catch {
                 }
             }
             
@@ -57,11 +59,11 @@ extension ViewController {
         else if dropper == self.tableViewDropper || dropper == self.droplet || dropper == self.view {
             let checkIfFiletypeIsAllowed = { (url: NSURL?) -> Bool in
                 if let aUrl = url {
-                    var error: NSError?
-                    var type: AnyObject?
-                    let gotResourceValue = aUrl.getResourceValue(&type, forKey: NSURLTypeIdentifierKey, error: &error)
+                    do {
+                        var type: AnyObject?
+                        
+                        try aUrl.getResourceValue(&type, forKey: NSURLTypeIdentifierKey)
                     
-                    if gotResourceValue {
                         if let type = type as? String {
                             for allowedType in self.allowedTypes {
                                 if NSWorkspace.sharedWorkspace().type(type, conformsToType: allowedType as String) {
@@ -70,6 +72,8 @@ extension ViewController {
                             }
                         }
                     }
+                    catch {
+                    }
                 }
                 
                 return false
@@ -77,14 +81,16 @@ extension ViewController {
             
             let fileIsRegularFile = { (url: NSURL?) -> Bool in
                 if let url = url {
-                    var error: NSError?
-                    var isFile: AnyObject?
-                    let gotResourceValue = url.getResourceValue(&isFile, forKey: NSURLIsRegularFileKey, error: &error)
+                    do {
+                        var isFile: AnyObject?
+                        
+                        try url.getResourceValue(&isFile, forKey: NSURLIsRegularFileKey)
                     
-                    if gotResourceValue {
                         if let isFile = isFile as? NSNumber {
                             return isFile.boolValue
                         }
+                    }
+                    catch {
                     }
                 }
                 
@@ -105,11 +111,16 @@ extension ViewController {
                         var output: [NSURL] = []
                         let isRecursive = NSUserDefaults.standardUserDefaults().boolForKey(kDefaultsRecursive)
                         
-                        var enumerator = NSFileManager.defaultManager().enumeratorAtURL(aUrl, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: (!isRecursive ? NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants : nil)|NSDirectoryEnumerationOptions.SkipsPackageDescendants, errorHandler: { (url, error) -> Bool in
+                        var options:NSDirectoryEnumerationOptions = [NSDirectoryEnumerationOptions.SkipsPackageDescendants]
+                        if !isRecursive {
+                            options.insert(NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants)
+                        }
+                        
+                        let enumerator = NSFileManager.defaultManager().enumeratorAtURL(aUrl, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: options, errorHandler: { (url, error) -> Bool in
                             return true
                         })
                         
-                        if var enumerator = enumerator {
+                        if let enumerator = enumerator {
                             for url in enumerator {
                                 if let url = url as? NSURL {
                                     if fileIsRegularFile(url) {
@@ -131,9 +142,9 @@ extension ViewController {
             
             let dedupe = { (paths: [String]) -> [String] in
                 var set: [String:Bool] = [:]
-                var indicesToRemove = NSMutableIndexSet()
+                let indicesToRemove = NSMutableIndexSet()
                 
-                for (i, path) in enumerate(paths) {
+                for (i, path) in paths.enumerate() {
                     if set[path] != nil {
                         indicesToRemove.addIndex(i)
                     }
@@ -142,10 +153,10 @@ extension ViewController {
                     }
                 }
                 
-                var sanitizedArray = NSMutableArray(array: paths)
+                let sanitizedArray = NSMutableArray(array: paths)
                 sanitizedArray.removeObjectsAtIndexes(indicesToRemove)
                 
-                if var output = sanitizedArray as NSArray as? [String] {
+                if let output = sanitizedArray as NSArray as? [String] {
                     return output
                 }
                 else {
@@ -154,7 +165,7 @@ extension ViewController {
             }
             
             // filter out the current files that can be processed
-            var outputStructs = self.files.filter({ (tuple:(path:String,status:FileStatus,error:ProcessorError?)) -> Bool in
+            let outputStructs = self.files.filter({ (tuple:(path:String,status:FileStatus,error:ProcessorError?)) -> Bool in
                 return tuple.status == .Ready
             })
             
@@ -164,7 +175,7 @@ extension ViewController {
             })
             
             // find new files
-            for (i, element) in enumerate(files) {
+            for (_, element) in files.enumerate() {
                 let urls = recursiveSearch(element)
                 
                 var paths: [String] = []

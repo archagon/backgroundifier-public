@@ -13,16 +13,57 @@
 		4E12290A1B8FD2BA008129B1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1229091B8FD2BA008129B1 /* main.swift */; };
 		4E12290C1B8FD584008129B1 /* Processor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E12290B1B8FD584008129B1 /* Processor.swift */; };
 		4E12290E1B8FD5FB008129B1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E12290D1B8FD5FB008129B1 /* ViewController.swift */; };
-		4E1229121B8FD722008129B1 /* NSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E1229111B8FD722008129B1 /* NSImageEffects.m */; };
-		4E39944C1B9C213C00075888 /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E39944B1B9C213C00075888 /* SLColorArt.m */; };
 		4E5549FE1B94BDCF0057079D /* ExtraViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5549FD1B94BDCF0057079D /* ExtraViews.swift */; };
 		4E60A29E1BA4DEC70044059E /* TimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E60A29D1BA4DEC70044059E /* TimingFunctions.swift */; };
+		4E747BB81BADEE29002202BB /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A871BACE54100045C45 /* SLColorArt.m */; };
+		4E747BB91BADEE2C002202BB /* NSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A851BACE54100045C45 /* NSImageEffects.m */; };
+		4E747BBA1BADEE30002202BB /* CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A801BACE54100045C45 /* CommandLine.swift */; };
+		4E747BBB1BADEE30002202BB /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A811BACE54100045C45 /* Option.swift */; };
+		4E747BBC1BADEE30002202BB /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A821BACE54100045C45 /* StringExtensions.swift */; };
+		4E747BC51BADEE36002202BB /* Processor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E12290B1B8FD584008129B1 /* Processor.swift */; };
+		4E747BC61BADEE36002202BB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1229091B8FD2BA008129B1 /* main.swift */; };
 		4E8BD99F1BA7DA70000EFA22 /* ViewController_DropletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8BD99E1BA7DA70000EFA22 /* ViewController_DropletView.swift */; };
 		4E8BD9A11BA7DAFD000EFA22 /* ViewController_DropperCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8BD9A01BA7DAFD000EFA22 /* ViewController_DropperCallbacks.swift */; };
 		4E8BD9A31BA7DB3B000EFA22 /* ViewController_UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8BD9A21BA7DB3B000EFA22 /* ViewController_UI.swift */; };
 		4E8BD9A51BA7DC0E000EFA22 /* ViewController_Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8BD9A41BA7DC0E000EFA22 /* ViewController_Data.swift */; };
-		4EAD45C11BA819A800523835 /* NOTES.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4EAD45C01BA819A800523835 /* NOTES.txt */; };
+		4EA23A881BACE54100045C45 /* CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A801BACE54100045C45 /* CommandLine.swift */; };
+		4EA23A891BACE54100045C45 /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A811BACE54100045C45 /* Option.swift */; };
+		4EA23A8A1BACE54100045C45 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A821BACE54100045C45 /* StringExtensions.swift */; };
+		4EA23A8B1BACE54100045C45 /* NSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A851BACE54100045C45 /* NSImageEffects.m */; };
+		4EA23A8C1BACE54100045C45 /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA23A871BACE54100045C45 /* SLColorArt.m */; };
+		4EC0C18C1BAE8D7500E21A2A /* bgify.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4EC0C18B1BAE8D7500E21A2A /* bgify.zip */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4ED1793E1BAEBA3C007B0443 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E1228D31B8D83CE008129B1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E747BB01BADEE13002202BB;
+			remoteInfo = bgify;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4E747BAF1BADEE13002202BB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		4E747BDF1BAE7C6B002202BB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4E1228DB1B8D83CE008129B1 /* Backgroundifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backgroundifier.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,21 +76,35 @@
 		4E12290B1B8FD584008129B1 /* Processor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Processor.swift; sourceTree = "<group>"; };
 		4E12290D1B8FD5FB008129B1 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4E12290F1B8FD721008129B1 /* Backgroundifier-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Backgroundifier-Bridging-Header.h"; sourceTree = "<group>"; };
-		4E1229101B8FD722008129B1 /* NSImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSImageEffects.h; sourceTree = "<group>"; };
-		4E1229111B8FD722008129B1 /* NSImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSImageEffects.m; sourceTree = "<group>"; };
-		4E39944A1B9C213C00075888 /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLColorArt.h; sourceTree = "<group>"; };
-		4E39944B1B9C213C00075888 /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLColorArt.m; sourceTree = "<group>"; };
 		4E5549FD1B94BDCF0057079D /* ExtraViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtraViews.swift; sourceTree = "<group>"; };
 		4E60A29D1BA4DEC70044059E /* TimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimingFunctions.swift; sourceTree = "<group>"; };
+		4E747BB11BADEE13002202BB /* bgify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bgify; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E747BE11BAE7FCE002202BB /* bgify.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = bgify.entitlements; path = Backgroundifier/bgify.entitlements; sourceTree = SOURCE_ROOT; };
+		4E747BE21BAE7FFD002202BB /* Info-bgify.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-bgify.plist"; path = "Backgroundifier/Info-bgify.plist"; sourceTree = SOURCE_ROOT; };
 		4E8BD99E1BA7DA70000EFA22 /* ViewController_DropletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController_DropletView.swift; sourceTree = "<group>"; };
 		4E8BD9A01BA7DAFD000EFA22 /* ViewController_DropperCallbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController_DropperCallbacks.swift; sourceTree = "<group>"; };
 		4E8BD9A21BA7DB3B000EFA22 /* ViewController_UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController_UI.swift; sourceTree = "<group>"; };
 		4E8BD9A41BA7DC0E000EFA22 /* ViewController_Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController_Data.swift; sourceTree = "<group>"; };
+		4EA23A801BACE54100045C45 /* CommandLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandLine.swift; sourceTree = "<group>"; };
+		4EA23A811BACE54100045C45 /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
+		4EA23A821BACE54100045C45 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		4EA23A841BACE54100045C45 /* NSImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSImageEffects.h; path = Modified/NSImageEffects.h; sourceTree = "<group>"; };
+		4EA23A851BACE54100045C45 /* NSImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSImageEffects.m; path = Modified/NSImageEffects.m; sourceTree = "<group>"; };
+		4EA23A861BACE54100045C45 /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLColorArt.h; path = Modified/SLColorArt.h; sourceTree = "<group>"; };
+		4EA23A871BACE54100045C45 /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLColorArt.m; path = Modified/SLColorArt.m; sourceTree = "<group>"; };
 		4EAD45C01BA819A800523835 /* NOTES.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTES.txt; sourceTree = "<group>"; };
+		4EC0C18B1BAE8D7500E21A2A /* bgify.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = bgify.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		4E1228D81B8D83CE008129B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E747BAE1BADEE13002202BB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -64,6 +119,7 @@
 			children = (
 				4E1228DD1B8D83CE008129B1 /* Backgroundifier */,
 				4E1228DC1B8D83CE008129B1 /* Products */,
+				4EC0C18B1BAE8D7500E21A2A /* bgify.zip */,
 			);
 			sourceTree = "<group>";
 		};
@@ -71,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				4E1228DB1B8D83CE008129B1 /* Backgroundifier.app */,
+				4E747BB11BADEE13002202BB /* bgify */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -78,7 +135,7 @@
 		4E1228DD1B8D83CE008129B1 /* Backgroundifier */ = {
 			isa = PBXGroup;
 			children = (
-				4E1228FD1B8EA945008129B1 /* Backgroundifier.entitlements */,
+				4EA23A7E1BACE54100045C45 /* External */,
 				4E1228E01B8D83CE008129B1 /* AppDelegate.swift */,
 				4E12290D1B8FD5FB008129B1 /* ViewController.swift */,
 				4E8BD99E1BA7DA70000EFA22 /* ViewController_DropletView.swift */,
@@ -88,10 +145,6 @@
 				4E5549FD1B94BDCF0057079D /* ExtraViews.swift */,
 				4E60A29D1BA4DEC70044059E /* TimingFunctions.swift */,
 				4E12290B1B8FD584008129B1 /* Processor.swift */,
-				4E1229101B8FD722008129B1 /* NSImageEffects.h */,
-				4E1229111B8FD722008129B1 /* NSImageEffects.m */,
-				4E39944A1B9C213C00075888 /* SLColorArt.h */,
-				4E39944B1B9C213C00075888 /* SLColorArt.m */,
 				4E1229091B8FD2BA008129B1 /* main.swift */,
 				4E1228E61B8D83CE008129B1 /* Main.storyboard */,
 				4E12290F1B8FD721008129B1 /* Backgroundifier-Bridging-Header.h */,
@@ -105,9 +158,34 @@
 		4E1228DE1B8D83CE008129B1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4E1228FD1B8EA945008129B1 /* Backgroundifier.entitlements */,
+				4E747BE11BAE7FCE002202BB /* bgify.entitlements */,
 				4E1228DF1B8D83CE008129B1 /* Info.plist */,
+				4E747BE21BAE7FFD002202BB /* Info-bgify.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4EA23A7E1BACE54100045C45 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				4EA23A7F1BACE54100045C45 /* CommandLine */,
+				4EA23A841BACE54100045C45 /* NSImageEffects.h */,
+				4EA23A851BACE54100045C45 /* NSImageEffects.m */,
+				4EA23A861BACE54100045C45 /* SLColorArt.h */,
+				4EA23A871BACE54100045C45 /* SLColorArt.m */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
+		4EA23A7F1BACE54100045C45 /* CommandLine */ = {
+			isa = PBXGroup;
+			children = (
+				4EA23A801BACE54100045C45 /* CommandLine.swift */,
+				4EA23A811BACE54100045C45 /* Option.swift */,
+				4EA23A821BACE54100045C45 /* StringExtensions.swift */,
+			);
+			path = CommandLine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,18 +195,38 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4E1228F71B8D83CE008129B1 /* Build configuration list for PBXNativeTarget "Backgroundifier" */;
 			buildPhases = (
+				4EC0C1891BAE894B00E21A2A /* ShellScript */,
 				4E1228D71B8D83CE008129B1 /* Sources */,
 				4E1228D81B8D83CE008129B1 /* Frameworks */,
 				4E1228D91B8D83CE008129B1 /* Resources */,
+				4E747BDF1BAE7C6B002202BB /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4ED1793F1BAEBA3C007B0443 /* PBXTargetDependency */,
 			);
 			name = Backgroundifier;
 			productName = Backgroundifier;
 			productReference = 4E1228DB1B8D83CE008129B1 /* Backgroundifier.app */;
 			productType = "com.apple.product-type.application";
+		};
+		4E747BB01BADEE13002202BB /* bgify */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E747BB71BADEE13002202BB /* Build configuration list for PBXNativeTarget "bgify" */;
+			buildPhases = (
+				4E747BAD1BADEE13002202BB /* Sources */,
+				4E747BAE1BADEE13002202BB /* Frameworks */,
+				4E747BAF1BADEE13002202BB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bgify;
+			productName = bgify;
+			productReference = 4E747BB11BADEE13002202BB /* bgify */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -136,17 +234,25 @@
 		4E1228D31B8D83CE008129B1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Alexei Baboulevitch";
 				TargetAttributes = {
 					4E1228DA1B8D83CE008129B1 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = R4MX2B96J2;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
 							};
 						};
+					};
+					4E747BB01BADEE13002202BB = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = R4MX2B96J2;
+						DevelopmentTeamName = "Alexei Baboulevitch";
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -164,6 +270,7 @@
 			projectRoot = "";
 			targets = (
 				4E1228DA1B8D83CE008129B1 /* Backgroundifier */,
+				4E747BB01BADEE13002202BB /* bgify */,
 			);
 		};
 /* End PBXProject section */
@@ -175,11 +282,29 @@
 			files = (
 				4E1228E51B8D83CE008129B1 /* Images.xcassets in Resources */,
 				4E1228E81B8D83CE008129B1 /* Main.storyboard in Resources */,
-				4EAD45C11BA819A800523835 /* NOTES.txt in Resources */,
+				4EC0C18C1BAE8D7500E21A2A /* bgify.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4EC0C1891BAE894B00E21A2A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/bgify",
+			);
+			outputPaths = (
+				"$(PROJECT_DIR)/bgify.zip",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Zipping bgify...\"\ncd $BUILT_PRODUCTS_DIR\nfile bgify\nrm $PROJECT_DIR/bgify.zip\nzip $PROJECT_DIR/bgify.zip bgify\nfile $PROJECT_DIR/bgify.zip\necho \"Done!\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4E1228D71B8D83CE008129B1 /* Sources */ = {
@@ -188,20 +313,45 @@
 			files = (
 				4E12290A1B8FD2BA008129B1 /* main.swift in Sources */,
 				4E60A29E1BA4DEC70044059E /* TimingFunctions.swift in Sources */,
-				4E39944C1B9C213C00075888 /* SLColorArt.m in Sources */,
 				4E12290C1B8FD584008129B1 /* Processor.swift in Sources */,
+				4EA23A881BACE54100045C45 /* CommandLine.swift in Sources */,
+				4EA23A891BACE54100045C45 /* Option.swift in Sources */,
+				4EA23A8B1BACE54100045C45 /* NSImageEffects.m in Sources */,
 				4E8BD9A51BA7DC0E000EFA22 /* ViewController_Data.swift in Sources */,
 				4E8BD99F1BA7DA70000EFA22 /* ViewController_DropletView.swift in Sources */,
-				4E1229121B8FD722008129B1 /* NSImageEffects.m in Sources */,
 				4E5549FE1B94BDCF0057079D /* ExtraViews.swift in Sources */,
 				4E8BD9A31BA7DB3B000EFA22 /* ViewController_UI.swift in Sources */,
 				4E12290E1B8FD5FB008129B1 /* ViewController.swift in Sources */,
+				4EA23A8C1BACE54100045C45 /* SLColorArt.m in Sources */,
 				4E8BD9A11BA7DAFD000EFA22 /* ViewController_DropperCallbacks.swift in Sources */,
+				4EA23A8A1BACE54100045C45 /* StringExtensions.swift in Sources */,
 				4E1228E11B8D83CE008129B1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4E747BAD1BADEE13002202BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4E747BBC1BADEE30002202BB /* StringExtensions.swift in Sources */,
+				4E747BB91BADEE2C002202BB /* NSImageEffects.m in Sources */,
+				4E747BB81BADEE29002202BB /* SLColorArt.m in Sources */,
+				4E747BBB1BADEE30002202BB /* Option.swift in Sources */,
+				4E747BC51BADEE36002202BB /* Processor.swift in Sources */,
+				4E747BC61BADEE36002202BB /* main.swift in Sources */,
+				4E747BBA1BADEE30002202BB /* CommandLine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4ED1793F1BAEBA3C007B0443 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E747BB01BADEE13002202BB /* bgify */;
+			targetProxy = 4ED1793E1BAEBA3C007B0443 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4E1228E61B8D83CE008129B1 /* Main.storyboard */ = {
@@ -236,6 +386,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -256,6 +407,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -292,6 +444,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -303,9 +456,11 @@
 				CODE_SIGN_ENTITLEMENTS = Backgroundifier/Backgroundifier.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = R4MX2B96J2;
 				INFOPLIST_FILE = Backgroundifier/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -320,13 +475,111 @@
 				CODE_SIGN_ENTITLEMENTS = Backgroundifier/Backgroundifier.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = R4MX2B96J2;
 				INFOPLIST_FILE = Backgroundifier/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		4E747BB51BADEE13002202BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				OTHER_CFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = R4MX2B96J2/;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		4E747BB61BADEE13002202BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				OTHER_CFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = R4MX2B96J2/;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		4ED179401BAEBC78007B0443 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 2.3;
+			};
+			name = Distribution;
+		};
+		4ED179411BAEBC78007B0443 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Backgroundifier/Backgroundifier.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = R4MX2B96J2;
+				INFOPLIST_FILE = Backgroundifier/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
 			};
-			name = Release;
+			name = Distribution;
+		};
+		4ED179421BAEBC78007B0443 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				OTHER_CFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Archagon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = R4MX2B96J2/;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Backgroundifier/Backgroundifier-Bridging-Header.h";
+			};
+			name = Distribution;
 		};
 /* End XCBuildConfiguration section */
 
@@ -336,6 +589,7 @@
 			buildConfigurations = (
 				4E1228F51B8D83CE008129B1 /* Debug */,
 				4E1228F61B8D83CE008129B1 /* Release */,
+				4ED179401BAEBC78007B0443 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -345,6 +599,17 @@
 			buildConfigurations = (
 				4E1228F81B8D83CE008129B1 /* Debug */,
 				4E1228F91B8D83CE008129B1 /* Release */,
+				4ED179411BAEBC78007B0443 /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E747BB71BADEE13002202BB /* Build configuration list for PBXNativeTarget "bgify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E747BB51BADEE13002202BB /* Debug */,
+				4E747BB61BADEE13002202BB /* Release */,
+				4ED179421BAEBC78007B0443 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

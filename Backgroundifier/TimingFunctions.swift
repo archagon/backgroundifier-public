@@ -12,12 +12,12 @@ import Foundation
 // t: current time, b: beginning value, c: change in value, d: duration
 
 func easeInCubic(t: Double, b: Double, c: Double, d: Double) -> Double {
-    var t = t/d
+    let t = t/d
     return c*(t)*t*t + b;
 }
 
 func easeOutCubic(t: Double, b: Double, c: Double, d: Double) -> Double {
-    var t = t/d-1
+    let t = t/d-1
     return c*((t)*t*t + 1) + b;
 }
 

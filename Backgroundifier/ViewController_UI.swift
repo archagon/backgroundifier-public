@@ -34,32 +34,42 @@ extension ViewController {
     }
     
     @IBAction func outputButtonTapped(control: NSButton?) {
-        var openPanel = NSOpenPanel()
+        let openPanel = NSOpenPanel()
+        openPanel.canCreateDirectories = true
         openPanel.canChooseDirectories = true
         openPanel.canChooseFiles = false
         openPanel.allowsMultipleSelection = false
-        openPanel.delegate = self
-        openPanel.runModal()
+        openPanel.message = "Please select the output directory for your converted images."
+        
+        self.openPanel = openPanel
+        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
+            if result == NSFileHandlingPanelOKButton {
+                if let url = openPanel.URLs.first {
+                    self.updateOutputDirectory(url)
+                }
+            }
+            self.openPanel = nil
+        }
     }
     
     @IBAction func finderButtonTapped(control: NSButton?) {
-        if let outputPath = self.outputDirectory, let outputURL = NSURL(fileURLWithPath: outputPath) {
+        if let outputPath = self.outputDirectory, let outputURL: NSURL = NSURL(fileURLWithPath: outputPath as String) {
             self.createOutputDirectory()
             NSWorkspace.sharedWorkspace().openURL(outputURL)
         }
     }
     
     @IBAction func colorTypePickerChangedValue(control: NSSegmentedControl?) {
-        if var control = control {
+        if let control = control {
             self.selectBlurOrColor(false)
             
             if (control.selectedSegment == 1) {
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: kDefaultsAuto)
                 
                 NSApplication.sharedApplication().orderFrontColorPanel(control)
-                var colorPanel: NSColorPanel = NSColorPanel.sharedColorPanel()
+                let colorPanel: NSColorPanel = NSColorPanel.sharedColorPanel()
                 colorPanel.setTarget(self)
-                colorPanel.setAction("colorPicked:")
+                colorPanel.setAction(#selector(ViewController.colorPicked(_:)))
                 colorPanel.color = self.customColor
             }
             else {
@@ -71,20 +81,18 @@ extension ViewController {
     }
     
     @IBAction func settingChecked(control: NSMatrix?) {
-        if var control = control {
+        if let control = control {
             for cell in control.cells {
-                if let cell = cell as? NSCell {
-                    let on = (cell.state == NSOnState)
-                    
-                    if cell.identifier == kDefaultsRecursive {
-                        NSUserDefaults.standardUserDefaults().setBool(on, forKey: kDefaultsRecursive)
-                    }
-                    else if cell.identifier == kDefaultsOverwrite {
-                        NSUserDefaults.standardUserDefaults().setBool(on, forKey: kDefaultsOverwrite)
-                    }
-                    
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                let on = (cell.state == NSOnState)
+                
+                if cell.identifier == kDefaultsRecursive {
+                    NSUserDefaults.standardUserDefaults().setBool(on, forKey: kDefaultsRecursive)
                 }
+                else if cell.identifier == kDefaultsOverwrite {
+                    NSUserDefaults.standardUserDefaults().setBool(on, forKey: kDefaultsOverwrite)
+                }
+                
+                NSUserDefaults.standardUserDefaults().synchronize()
             }
         }
     }
@@ -134,14 +142,14 @@ extension ViewController {
     }
     
     func updateColorPickerAppearance() {
-        if var colorPicker = self.colorPicker {
-            var image = NSImage(size: NSMakeSize(colorPicker.bounds.size.height * 0.7, colorPicker.bounds.size.height * 0.7))
+        if let colorPicker = self.colorPicker {
+            let image = NSImage(size: NSMakeSize(colorPicker.bounds.size.height * 0.7, colorPicker.bounds.size.height * 0.7))
             
             image.lockFocus()
             self.customColor.setFill()
             var rect = NSMakeRect(0, 0, 0, 0)
             rect.size = image.size
-            var path = NSBezierPath(roundedRect: rect, xRadius: 3, yRadius: 3)
+            let path = NSBezierPath(roundedRect: rect, xRadius: 3, yRadius: 3)
             path.fill()
             NSColor.grayColor().setStroke()
             path.lineWidth = 2
@@ -158,7 +166,7 @@ extension ViewController {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         let setButtonState = { (button: NSButton?, state: Int) -> Void in
-            if var button = button {
+            if let button = button {
                 if button.state != state {
                     button.state = state
                 }
@@ -193,9 +201,9 @@ extension ViewController {
                 let frame = NSMakeRect(window.frame.origin.x, window.frame.origin.y - (height - window.frame.size.height), self.view.frame.size.width, height)
                 
                 if animated {
-                    let windowResize = [ NSViewAnimationTargetKey:window, NSViewAnimationEndFrameKey:NSValue(rect: frame) ]
+                    let windowResize: [String:AnyObject] = [ NSViewAnimationTargetKey:window, NSViewAnimationEndFrameKey:NSValue(rect: frame) ]
                     let animations = [ windowResize ]
-                    var animation = NSViewAnimation(viewAnimations: animations)
+                    let animation = NSViewAnimation(viewAnimations: animations)
                     animation.animationBlockingMode = NSAnimationBlockingMode.Nonblocking //can run w/other animations concurrently
                     animation.animationCurve = NSAnimationCurve.EaseInOut
                     animation.duration = 0.3

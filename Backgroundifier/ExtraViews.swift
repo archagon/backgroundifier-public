@@ -22,19 +22,19 @@ class ShadowView : NSView {
     var rect: NSRect = NSMakeRect(0, 0, 0, 0)
     
     override func drawRect(dirtyRect: NSRect) {
-        var ctx = NSGraphicsContext.currentContext()?.CGContext
-        
-        CGContextSaveGState(ctx)
-        
-        var shadowPath = NSBezierPath(rect: self.rect)
-        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), blur, NSColor.blackColor().colorWithAlphaComponent(0.5).CGColor)
-        NSColor.blackColor().setFill()
-        shadowPath.fill()
-        CGContextRestoreGState(ctx)
+        if let ctx = NSGraphicsContext.currentContext()?.CGContext {
+            CGContextSaveGState(ctx)
+            
+            let shadowPath = NSBezierPath(rect: self.rect)
+            CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), blur, NSColor.blackColor().colorWithAlphaComponent(0.5).CGColor)
+            NSColor.blackColor().setFill()
+            shadowPath.fill()
+            CGContextRestoreGState(ctx)
+        }
     }
 }
 
-class DragDroppableView : NSView, NSDraggingDestination {
+class DragDroppableView : NSView {
     weak var delegate: DraggityDropDestination? {
         didSet {
             register()
@@ -84,7 +84,7 @@ class DragDroppableView : NSView, NSDraggingDestination {
             return false
         }
         
-        let classArray: [AnyObject] = [ NSURL.self ]
+        let classArray: [AnyClass] = [ NSURL.self ]
         let returnArray = sender.draggingPasteboard().readObjectsForClasses(classArray, options: [ NSPasteboardURLReadingFileURLsOnlyKey : true ])
         
         if let urlArray = returnArray as? [NSURL], delegate = self.delegate {
@@ -118,8 +118,8 @@ class DropletView : DragDroppableView {
         
         let lineWidth: CGFloat = (self.borderColor != nil ? 3 : 0)
         
-        var smallerRect = CGRectMake(lineWidth / CGFloat(2), lineWidth / CGFloat(2), self.bounds.size.width - lineWidth, self.bounds.size.height - lineWidth)
-        var path = NSBezierPath(roundedRect: smallerRect, xRadius: 10, yRadius: 10)
+        let smallerRect = CGRectMake(lineWidth / CGFloat(2), lineWidth / CGFloat(2), self.bounds.size.width - lineWidth, self.bounds.size.height - lineWidth)
+        let path = NSBezierPath(roundedRect: smallerRect, xRadius: 10, yRadius: 10)
         
         if self.highlightColor != nil {
             self.highlightColor!.setFill()
@@ -151,7 +151,7 @@ class AutoColorBackingView: NSView {
     override func drawRect(dirtyRect: NSRect) {
         let borderWidth: CGFloat = 1
         
-        var path = NSBezierPath(roundedRect: NSMakeRect(borderWidth / 2.0, borderWidth / 2.0, self.bounds.size.width - borderWidth, self.bounds.size.height - borderWidth), xRadius: 4, yRadius: 4)
+        let path = NSBezierPath(roundedRect: NSMakeRect(borderWidth / 2.0, borderWidth / 2.0, self.bounds.size.width - borderWidth, self.bounds.size.height - borderWidth), xRadius: 4, yRadius: 4)
         path.lineWidth = borderWidth
         
         NSColor.whiteColor().setFill()
@@ -200,7 +200,7 @@ class CustomButtonCell : NSButtonCell {
             }
         }()
         
-        var clipPath: NSBezierPath = NSBezierPath()
+        let clipPath: NSBezierPath = NSBezierPath()
         
         if (self.top) {
             clipPath.moveToPoint(NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height))
@@ -219,7 +219,7 @@ class CustomButtonCell : NSButtonCell {
             clipPath.lineToPoint(NSMakePoint(frame.origin.x, frame.origin.y))
         }
         
-        var strokePath: NSBezierPath = clipPath.copy() as! NSBezierPath
+        let strokePath: NSBezierPath = clipPath.copy() as! NSBezierPath
         strokePath.lineWidth = lineWidth
         
         var fillColor: NSColor?
@@ -295,7 +295,7 @@ class CustomButtonCell : NSButtonCell {
         textColor = textColor?.colorUsingColorSpace(NSColorSpace.deviceRGBColorSpace())
         
         if let textColor = textColor {
-            var colorTitle = NSMutableAttributedString(attributedString: self.attributedTitle)
+            let colorTitle = NSMutableAttributedString(attributedString: self.attributedTitle)
             let titleRange = NSMakeRange(0, colorTitle.length)
             colorTitle.addAttribute(NSForegroundColorAttributeName, value: textColor, range: titleRange)
             self.attributedTitle = colorTitle

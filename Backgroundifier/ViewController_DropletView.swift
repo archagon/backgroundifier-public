@@ -9,7 +9,7 @@
 extension ViewController {
     func varyDropper(t: CGFloat) {
         // TODO: this is wacky and brittle
-        if var container = self.dropletContainer, var shadow = self.dropletShadow {
+        if let container = self.dropletContainer, let shadow = self.dropletShadow {
             let minimumScale: CGFloat = 0.85
             let maximumScale: CGFloat = 0.90
             let scale: CGFloat = minimumScale + (maximumScale - minimumScale) * t
@@ -24,7 +24,7 @@ extension ViewController {
             shadowRect.origin = NSMakePoint((shadow.bounds.size.width - shadowRect.size.width) / 2.0, (shadow.bounds.size.height - shadowRect.size.height) / 2.0)
             
             shadow.rect = shadowRect
-            let shadowT: CGFloat = (1 - t)
+            //let shadowT: CGFloat = (1 - t)
             shadow.blur = CGFloat(5) + t * CGFloat(15)
             shadow.setNeedsDisplayInRect(shadow.bounds)
         }
@@ -70,9 +70,9 @@ extension ViewController {
         let startTime = CACurrentMediaTime()
         let originalStartTime = startTime - durationAlreadyPlayed
         
-        var timer = NSTimer(timeInterval: 1/60.0, target: self, selector: "dropperTimerCallback:", userInfo: nil, repeats: true)
+        let timer = NSTimer(timeInterval: 1/60.0, target: self, selector: #selector(ViewController.dropperTimerCallback(_:)), userInfo: nil, repeats: true)
         
-        var action = { (t: Double) -> Void in
+        let action = { (t: Double) -> Void in
             self.varyDropper(CGFloat(t))
         }
         
@@ -82,13 +82,13 @@ extension ViewController {
     
     func dropperLift() {
         self.dropperSetupTimer(Double(varyDropperT()), duration: 0.15, timingFunction: { (duration: Double, t: Double) -> Double in
-            return easeOutCubic(duration * t, 0, 1, duration)
+            return easeOutCubic(duration * t, b: 0, c: 1, d: duration)
         })
     }
     
     func dropperDrop() {
         self.dropperSetupTimer(Double(1 - varyDropperT()), duration: 0.5, timingFunction: { (duration: Double, t: Double) -> Double in
-            return easeOutBounce(duration * t, 1, -1, duration)
+            return easeOutBounce(duration * t, b: 1, c: -1, d: duration)
         })
     }
     
@@ -99,10 +99,10 @@ extension ViewController {
             let time = duration * t
             
             if time < upTime {
-                return easeOutCubic(time, 0, 1, upTime)
+                return easeOutCubic(time, b: 0, c: 1, d: upTime)
             }
             else if time < upTime + downTime {
-                return easeOutBounce(time - upTime, 1, -1, downTime)
+                return easeOutBounce(time - upTime, b: 1, c: -1, d: downTime)
             }
             else {
                 return 0
@@ -218,9 +218,9 @@ extension ViewController {
             self.setUIEnabled(false)
             self.dropperDrop()
             
-            if var dropletCancel = self.dropletCancel {
-                var color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
-                var string = NSMutableAttributedString(attributedString: dropletCancel.attributedTitle)
+            if let dropletCancel = self.dropletCancel {
+                let color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
+                let string = NSMutableAttributedString(attributedString: dropletCancel.attributedTitle)
                 string.replaceCharactersInRange(NSMakeRange(0, string.length), withString: "Cancel\n ")
                 string.removeAttribute(NSForegroundColorAttributeName, range: NSMakeRange(0, string.length))
                 string.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, string.length))
@@ -247,7 +247,7 @@ extension ViewController {
             self.setUIEnabled(false)
             self.dropperDrop()
             
-            if var dropletCancel = self.dropletCancel {
+            if let dropletCancel = self.dropletCancel {
                 // using the non-attributed title here results in correct gray-out-on-disable behavior
                 dropletCancel.title = "Cancelling...\n "
             }

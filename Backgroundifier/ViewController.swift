@@ -9,7 +9,7 @@
 import Cocoa
 import QuartzCore
 
-class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSOpenSavePanelDelegate, DraggityDropDestination {
+class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, DraggityDropDestination {
     enum FileStatus: Int {
         case None = 0
         case Ready
@@ -38,6 +38,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         case InvalidOutput
         case NotEnoughSpace
         case ProcessingFailed
+        case NoWritePermission
         case Other
         
         var description : String {
@@ -49,6 +50,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             case .InvalidOutput: return "Invalid output"
             case .NotEnoughSpace: return "Not enough space"
             case .ProcessingFailed: return "Processing failed"
+            case .NoWritePermission: return "No write permission"
             case .Other: return "Other"
             }
         }
@@ -113,13 +115,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var settings: NSMatrix?
     @IBOutlet weak var outputDirectoryLabel: NSTextField?
     
+    weak var openPanel: NSOpenPanel?
+    
     // parameters
-    var outputDirectory: String?
+    var outputDirectory: NSString? //TODO: change back to URL as per Swift errors
+    var outputURL: NSURL? //AB: solely for security scoping shenanigans -- replace above later
     var customColor: NSColor {
         get {
-            if let
-                data = NSUserDefaults.standardUserDefaults().dataForKey(kDefaultsColor),
-                color = NSUnarchiver.unarchiveObjectWithData(data) as? NSColor {
+            if
+                let data = NSUserDefaults.standardUserDefaults().dataForKey(kDefaultsColor),
+                let color = NSUnarchiver.unarchiveObjectWithData(data) as? NSColor
+            {
                 return color
             }
             else {
@@ -140,14 +146,37 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     var queue: dispatch_queue_t
 
     required init?(coder: NSCoder) {
-        // initialize output directory with default document directory
-        let paths = NSSearchPathForDirectoriesInDomains(.PicturesDirectory, .UserDomainMask, true)
-        if let output = paths.first as? String {
-            if var outputResolvedPath = NSURL(fileURLWithPath: output)?.path?.stringByResolvingSymlinksInPath {
-                var destinationName = "Backgroundifier"
-                outputResolvedPath = outputResolvedPath.stringByAppendingPathComponent(destinationName)
+        // first, see if we have an existing security-scoped bookmark
+        if let bookmark = NSUserDefaults.standardUserDefaults().objectForKey(kDefaultsLastUsedDirectory) as? NSData {
+            do {
+                var stale: ObjCBool = false
+                let url = try NSURL(byResolvingBookmarkData: bookmark, options: .WithSecurityScope, relativeToURL: nil, bookmarkDataIsStale: &stale)
                 
-                self.outputDirectory = outputResolvedPath
+                if stale {
+                    NSLog("Warning: security scoped bookmark was stale")
+                }
+                else {
+                    url.startAccessingSecurityScopedResource()
+                    
+                    self.outputDirectory = url.path
+                    self.outputURL = url
+                }
+            }
+            catch {
+                NSLog("Warning: security scoped bookmark could not be resolved")
+            }
+        }
+        
+        if self.outputDirectory == nil {
+            // initialize output directory with default document directory
+            let paths = NSSearchPathForDirectoriesInDomains(.PicturesDirectory, .UserDomainMask, true)
+            if let output = paths.first {
+                if var outputResolvedPath: NSString = (NSURL(fileURLWithPath: output).path as NSString?)?.stringByResolvingSymlinksInPath {
+                    let destinationName = "Backgroundifier"
+                    outputResolvedPath = outputResolvedPath.stringByAppendingPathComponent(destinationName)
+                    
+                    self.outputDirectory = outputResolvedPath
+                }
             }
         }
         
@@ -171,64 +200,64 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         self.outputButtonDropper?.delegate = self
         self.tableViewDropper?.delegate = self
         
-        if var dropletStart = self.dropletStart {
-            var color = NSColor(hue: CGFloat(112.0/360.0), saturation: 1, brightness: 0.59, alpha: 1)
-            var colorTitle = NSMutableAttributedString(attributedString: dropletStart.attributedTitle)
+        if let dropletStart = self.dropletStart {
+            let color = NSColor(hue: CGFloat(112.0/360.0), saturation: 1, brightness: 0.59, alpha: 1)
+            let colorTitle = NSMutableAttributedString(attributedString: dropletStart.attributedTitle)
             let titleRange = NSMakeRange(0, colorTitle.length)
             colorTitle.addAttribute(NSForegroundColorAttributeName, value: color, range: titleRange)
             dropletStart.attributedTitle = colorTitle
         }
         
-        if var dropletClear = self.dropletClear {
-            var color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
-            var colorTitle = NSMutableAttributedString(attributedString: dropletClear.attributedTitle)
+        if let dropletClear = self.dropletClear {
+            let color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
+            let colorTitle = NSMutableAttributedString(attributedString: dropletClear.attributedTitle)
             let titleRange = NSMakeRange(0, colorTitle.length)
             colorTitle.addAttribute(NSForegroundColorAttributeName, value: color, range: titleRange)
             dropletClear.attributedTitle = colorTitle
         }
         
-        if var dropletCancel = self.dropletCancel {
-            var color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
-            var colorTitle = NSMutableAttributedString(attributedString: dropletCancel.attributedTitle)
+        if let dropletCancel = self.dropletCancel {
+            let color = NSColor(hue: 1, saturation: 0.99, brightness: 0.95, alpha: 1)
+            let colorTitle = NSMutableAttributedString(attributedString: dropletCancel.attributedTitle)
             let titleRange = NSMakeRange(0, colorTitle.length)
             colorTitle.addAttribute(NSForegroundColorAttributeName, value: color, range: titleRange)
             dropletCancel.attributedTitle = colorTitle
         }
         
-        if var dropletDone = self.dropletDone {
-            var color = NSColor(hue: CGFloat(112.0/360.0), saturation: 1, brightness: 0.59, alpha: 1)
-            var colorTitle = NSMutableAttributedString(attributedString: dropletDone.attributedTitle)
+        if let dropletDone = self.dropletDone {
+            let color = NSColor(hue: CGFloat(112.0/360.0), saturation: 1, brightness: 0.59, alpha: 1)
+            let colorTitle = NSMutableAttributedString(attributedString: dropletDone.attributedTitle)
             let titleRange = NSMakeRange(0, colorTitle.length)
             colorTitle.addAttribute(NSForegroundColorAttributeName, value: color, range: titleRange)
             dropletDone.attributedTitle = colorTitle
         }
         
         // black square w/o this incantation; whatever
-        if var container = self.dropletContainer {
+        if let container = self.dropletContainer {
             container.scaleUnitSquareToSize(NSMakeSize(0.5, 0.5))
         }
         
-        if let cell: AnyObject = self.colorButton?.cell() {
+        if let cell: NSCell = self.colorButton?.cell {
             (cell as? CustomButtonCell)?.top = false
         }
         
         // initialize user default bindings
-        if var settings = self.settings {
+        if let settings = self.settings {
             for cell in settings.cells {
-                if var cell = cell as? NSButtonCell, let identifier = cell.identifier {
+                if let cell = cell as? NSButtonCell, let identifier = cell.identifier {
                     cell.state = (NSUserDefaults.standardUserDefaults().boolForKey(identifier) ? NSOnState : NSOffState)
                 }
             }
         }
         
         if let pathString = self.outputDirectory {
-            outputButton?.title = pathString
+            outputButton?.title = pathString as String
         }
         else {
             outputButton?.title = "Please select an output directory"
         }
         
-        let auto = NSUserDefaults.standardUserDefaults().boolForKey(kDefaultsAuto)
+        let _ = NSUserDefaults.standardUserDefaults().boolForKey(kDefaultsAuto)
         self.colorPicker?.selectSegmentWithTag(NSUserDefaults.standardUserDefaults().boolForKey(kDefaultsAuto) ? 0 : 1)
         
         self.updateColorPickerAppearance()
@@ -251,18 +280,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     // close on Cmd-W
     override func keyDown(theEvent: NSEvent) {
-        if theEvent.characters?.uppercaseString == "W" && (theEvent.modifierFlags & NSEventModifierFlags.CommandKeyMask != nil) {
+        if theEvent.characters?.uppercaseString == "W" && theEvent.modifierFlags.contains(NSCommandKeyMask) {
             self.view.window?.performClose(self)
         }
-    }
-    
-    ////////////////////////////////
-    // MARK: - Open Panel Delegate -
-    ////////////////////////////////
-    
-    func panel(sender: AnyObject, validateURL url: NSURL, error outError: NSErrorPointer) -> Bool {
-        self.updateOutputDirectory(url)
-        return true
     }
     
     //////////////////////////////////////////////

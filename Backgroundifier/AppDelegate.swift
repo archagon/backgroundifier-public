@@ -36,18 +36,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     // handles dropping stuff onto the icon
-    func application(sender: NSApplication, openFiles filenames: [AnyObject]) {
-        if var controller = NSApplication.sharedApplication().mainWindow?.contentViewController as? ViewController {
-            var files: [NSURL] = []
-            
-            for filename in filenames {
-                if let filename = filename as? String, let url = NSURL(fileURLWithPath: filename) {
-                    files.append(url)
+    func application(sender: NSApplication, openFiles filenames: [String]) {
+        if let controller = NSApplication.sharedApplication().mainWindow?.contentViewController as? ViewController {
+            // TODO: kind of a quick hack; should really have toggle right in AppController
+            let droppersDisabled: Bool = {
+                if let droplet = controller.droplet {
+                    if !droplet.enabled {
+                        return true
+                    }
                 }
-            }
+                if let droplet = controller.tableViewDropper {
+                    if !droplet.enabled {
+                        return true
+                    }
+                }
+                
+                return false
+            }()
             
-            controller.dropperDidGetFiles(controller.view, files: files)
-            controller.dropperBounce()
+            if !droppersDisabled {
+                var files: [NSURL] = []
+                
+                for filename in filenames {
+                    if let url: NSURL = NSURL(fileURLWithPath: filename) {
+                        files.append(url)
+                    }
+                }
+                
+                controller.dropperDidGetFiles(controller.view, files: files)
+                controller.dropperBounce()
+            }
         }
     }
 
